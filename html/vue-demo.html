@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Vue Demo</title>
+    <!-- Bootstrap -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center">Vue 实例</h1>
+    <div id="app">
+        <div>
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="name" class="col-md-4 control-label">姓名</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" v-model="newPerson.name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="age" class="col-md-4 control-label">年龄</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" v-model="newPerson.age">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="sex" class="col-md-4 control-label">性别</label>
+                    <div class="col-md-8">
+                        <select v-model="newPerson.sex" class="form-control">
+                            <option value="Male">male</option>
+                            <option value="Female">female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <button type="button" class="btn btn-default col-md-offset-4" @click="createPerson">创建用户</button>
+                </div>
+            </form>
+        </div>
+        <div>
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr>
+                    <td>姓名</td>
+                    <td>年龄</td>
+                    <td>性别</td>
+                    <td>操作</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(person,index) in people">
+                    <td>{{person.name}}</td>
+                    <td>{{person.age}}</td>
+                    <td>{{person.sex}}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-default" @click="deletePerson(index)">删除用户</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script src="../js/vue.js"></script>
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            newPerson: {
+                name: '',
+                age: 0,
+                sex: 'Male'
+            },
+            people: [
+                {
+                    name: 'Jack',
+                    age: 30,
+                    sex: 'Male'
+                }, {
+                    name: 'Bill',
+                    age: 26,
+                    sex: 'Male'
+                }, {
+                    name: 'Tracy',
+                    age: 22,
+                    sex: 'Female'
+                }, {
+                    name: 'Chris',
+                    age: 36,
+                    sex: 'Male'
+                }
+            ]
+        },
+        methods: {
+            createPerson: function () {
+                this.people.push(this.newPerson);
+                this.newPerson = {
+                    name: '',
+                    age: 0,
+                    sex: 'Male'
+                }
+            },
+            deletePerson:function (index) {
+                // 删一个数组元素
+                this.people.splice(index,1)
+            }
+        }
+    });
+</script>
+</body>
+</html>
