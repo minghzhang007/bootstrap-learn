@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Vue学习1</title>
+    <!-- Bootstrap -->
+    <link href="../../css/bootstrap.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div id="app">
+        <p>Original message :{{message}}</p>
+        <p>Computed reversed message: {{reversedMessage}}</p>
+        <p>reverse method message: {{reverse()}}</p>
+        <p>now: {{now}}</p>
+        <div>
+            <p>FullName: {{fullName}} <input type="text" v-model="fullName"></p>
+            <p>firstName: {{firstName}} <input type="text" v-model="firstName"></p>
+            <p>lastName: {{lastName}} <input type="text" v-model="lastName"></p>
+        </div>
+        <div>
+            <p>Ask a yes/no question: <input type="text" v-model="question"></p>
+            <p>{{answer}}</p>
+        </div>
+        <div>
+            Class绑定：
+            <div class="static" :class="{active:isActive,'text-danger':hasError}"></div>
+            <div :class="classObject"></div>
+        </div>
+
+        <div>
+            v-if指令：<input type="text" v-model="ok">
+            <template v-if="ok">
+                <h1>Title</h1>
+                <p>Paragraph 1</p>
+                <p>Paragraph 2</p>
+            </template>
+        </div>
+
+        <div>
+            用Key管理可复用的元素
+            <input type="text" v-model="loginType">
+            <template v-if="loginType =='username'">
+                <label>Username</label>
+                <input placeholder="Enter your username">
+            </template>
+            <template v-else>
+                <label>Email</label>
+                <input placeholder="Enter your email account">
+            </template>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="../../js/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            message: "Hello",
+            firstName: "Steven",
+            lastName: "Smith",
+            question: '',
+            answer: "i cannot give you an answer until you ask a question!",
+            isActive:true,
+            hasError:true,
+            classObject:{
+                active:true,
+                'text-danger':false
+            },
+            ok:true,
+            loginType:'username'
+        },
+        watch: {
+            question: function (newQuestion) {
+                this.answer = "waiting for you to stop typing...";
+                this.getAnswer();
+            }
+        },
+        computed: {
+            // a computed getter
+            reversedMessage: function () {
+                //'this' points to the vm instance
+                return this.message.split('').reverse().join('');
+            },
+            now: function () {
+                return Date.now();
+            },
+            fullName: function () {
+                return this.firstName + ' ' + this.lastName;
+            }
+        },
+        methods: {
+            reverse: function () {
+                return this.message.split('').reverse().join('');
+            },
+            // _.debounce 是一个通过 lodash 限制操作频率的函数。
+            // 在这个例子中，我们希望限制访问 yesno.wtf/api 的频率
+            // ajax 请求直到用户输入完毕才会发出
+            // 学习更多关于 _.debounce function (and its cousin
+            // _.throttle)，参考：https://lodash.com/docs#debounce
+            getAnswer: _.debounce(function () {
+                if (this.question.indexOf('?') === -1){
+                    this.answer ='Questions usually contain a question mark. ;-)'
+                    return
+                }
+                this.answer='Thinking'
+                var vm = this;
+                axios.get("https://yesno.wtf/api")
+                    .then(function (response) {
+                        vm.answer=_.capitalize(response.data.answer);
+                    }).catch(function (error) {
+                    vm.answer='Error! Could not reach the API. ' + error
+                })
+                },
+                // 这是我们为用户停止输入等待的毫秒数
+                500)
+        }
+    });
+
+</script>
+</body>
+</html>

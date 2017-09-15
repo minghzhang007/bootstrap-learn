@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Vue学习1</title>
+    <!-- Bootstrap -->
+    <link href="../../css/bootstrap.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <ul id="app">
+        <!--第二个参数index为当前项的索引-->
+        <li v-for="(item,index) in items">
+            {{item.message}} -- {{index}}
+        </li>
+
+        <div>
+            <span>一个对象的v-for</span>
+            <ul>
+                <!--第二个的参数key为键名,第三个参数index为索引-->
+                <li v-for="(value,key,index) in person">
+                    {{index}} -- {{key}} : {{value}}
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <ul>
+                <li v-for="n in numbers">{{n}}</li>
+            </ul>
+            <br>偶数：
+            <ul>
+                <li v-for="n in evenNumbers">{{n}}</li>
+            </ul>
+            <br>基数：
+            <ul>
+                <li v-for="n in odd(numbers)">{{n}}</li>
+            </ul>
+            <br>
+            <ul>
+                <template v-for="n in evenNumbers">
+                    <li>{{n}}</li>
+                    <li class="divider"></li>
+                </template>
+            </ul>
+        </div>
+
+        <div>
+            <button @click="counter +=1">增加1</button>
+            <p>这个按钮被点击了{{counter}}次</p>
+            <a @click.once="doThis">doThis</a>
+        </div>
+
+
+        <div>
+            <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+            <label for="jack">Jack</label>
+            <input type="checkbox" id="john" value="John" v-model="checkedNames">
+            <label for="john">John</label>
+            <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+            <label for="mike">Mike</label>
+            <br>
+            <span>Checked names: {{ checkedNames }}</span>
+        </div>
+
+        <div>
+            <select v-model="selected">
+                <option v-for="option in options" :value="option.value">
+                    {{option.text}}
+                </option>
+            </select>
+            <span>Selected:{{selected}}</span>
+        </div>
+    </ul>
+
+</div>
+
+
+<script src="../../js/vue.js"></script>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            items: [
+                {message: "love !"},
+                {message: "you !"}
+            ],
+            person: {
+                name: 'lewis',
+                hobby: 'sing dancing',
+                age: 26
+            },
+            numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+            counter: 0,
+            checkedNames:'',
+            selected:'A',
+            options:[
+                {text:'One',value:'A'},
+                {text:'Two',value:'B'},
+                {text:'Three',value:'C'},
+                {text:'Four',value:'D'}
+            ]
+        },
+        watch: {},
+        computed: {
+            // a computed getter
+            evenNumbers: function () {
+                return this.numbers.filter(function (number) {
+                    return number % 2 === 0
+                })
+            }
+        },
+        methods: {
+            odd: function (numbers) {
+                return numbers.filter(function (t) {
+                    return t % 2 == 1
+                })
+            },
+            doThis:function () {
+                alert("do this")
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
